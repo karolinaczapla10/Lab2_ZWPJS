@@ -8,11 +8,28 @@
 import SwiftUI
 
 struct CardView: View {
+    var number: String
+    @State private var odworcona: Bool = true
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ZStack {
+            RoundedRectangle(cornerRadius: 25.0)
+                .fill(odworcona ? Color.white : Color.blue)
+                .overlay(RoundedRectangle(cornerRadius: 25.0)
+                    .strokeBorder(lineWidth: 10))
+            
+            Text("😍")
+                .font(.largeTitle)
+                .foregroundColor(.black)
+                .opacity(odworcona ? 1 : 0)
+        }
+        .onTapGesture {
+            odworcona.toggle()
+        }
+        .frame(width: 150, height: 200)
     }
 }
 
 #Preview {
-    CardView()
+    CardView(number: "1")
 }
