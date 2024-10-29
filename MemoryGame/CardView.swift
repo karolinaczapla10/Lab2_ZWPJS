@@ -8,28 +8,27 @@
 import SwiftUI
 
 struct CardView: View {
-    var number: String
-    @State private var odworcona: Bool = true
-
+    @State var isFaceUp = true
+    var content: String
     var body: some View {
         ZStack {
-            RoundedRectangle(cornerRadius: 25.0)
-                .fill(odworcona ? Color.white : Color.blue)
-                .overlay(RoundedRectangle(cornerRadius: 25.0)
-                    .strokeBorder(lineWidth: 10))
-            
-            Text("😍")
-                .font(.largeTitle)
-                .foregroundColor(.black)
-                .opacity(odworcona ? 1 : 0)
+            let base = RoundedRectangle(cornerRadius: 12)
+            Group {
+                base.fill(.white)
+                base.strokeBorder(lineWidth: 2)
+                Text(content).font(.system(size: 200))
+                    .minimumScaleFactor(0.01)
+                    .aspectRatio(contentMode: .fit)
+            }
+            .opacity(isFaceUp ? 1 : 0)
+            base.fill().opacity(isFaceUp ? 0 : 1)
         }
-        .onTapGesture {
-            odworcona.toggle()
-        }
-        .frame(width: 150, height: 200)
+        .onTapGesture(perform: {
+            isFaceUp.toggle()
+        })
     }
 }
 
 #Preview {
-    CardView(number: "1")
+    CardView(content: "👻")
 }
