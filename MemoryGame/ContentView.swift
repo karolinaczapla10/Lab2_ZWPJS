@@ -8,13 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var themeNumber = 1
-    @State private var themeColor = Color.blue
-    @State private var tab: [String] = ["😂", "😝", "🤩", "🤨", "🙃", "😇", "🤓", "😚"]
-
-    let tab1 = ["😂", "😝", "🤩", "🤨", "🙃", "😇", "🤓", "😚"]
-    let tab2 = ["🍎", "🍈", "🍋", "🫛", "🍳", "🍏", "🍋"]
-    let tab3 = ["🥲", "🏀", "🥎", "🎾", "🏉", "🏐", "🏑", "🛝"]
+    @ObservedObject var viewmodel: MemoGameViewModel
 
     var body: some View {
         VStack {
@@ -22,83 +16,62 @@ struct ContentView: View {
                 .font(.largeTitle)
                 .fontWeight(.bold)
                 .padding()
-            
-            // Wyświetlanie kart
+                .foregroundColor(viewmodel.themeColor)
+
             cardDisplay
             
             Spacer()
             
-            // Przycisk zmiany motywu
             HStack {
-                Button(action: { updateTheme(to: 1) }) {
+                Button(action: { viewmodel.changeTheme(to: 1) }) {
                     VStack {
                         Image(systemName: "face.smiling")
                         Text("Faces")
                     }
-                    .padding()
                 }
-                .background(Color.blue)
-                .cornerRadius(8)
+                .padding()
                 
-                Button(action: { updateTheme(to: 2) }) {
+                Button(action: { viewmodel.changeTheme(to: 2) }) {
                     VStack {
                         Image(systemName: "leaf")
                         Text("Fruits")
                     }
-                    .padding()
                 }
-                .background(Color.green)
-                .cornerRadius(8)
+                .padding()
                 
-                Button(action: { updateTheme(to: 3) }) {
+                Button(action: { viewmodel.changeTheme(to: 3) }) {
                     VStack {
                         Image(systemName: "sportscourt")
                         Text("Sports")
                     }
-                    .padding()
                 }
-                .background(Color.red)
-                .cornerRadius(8)
+                .padding()
             }
-            .padding()
-        }
-        .onAppear {
-            updateTheme(to: themeNumber)
-        }
-    }
-    
-    private var cardDisplay: some View {
-        ScrollView {
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: 80))]) {
-                ForEach(0..<min(tab.count, 8), id: \.self) { i in
-                    CardView(content: tab[i])
-                        .aspectRatio(2/3, contentMode: .fit)
-                        .foregroundColor(themeColor)
-                }
+            
+            Button(action: { viewmodel.shuffleCards() }) {
+                Text("Shuffle Cards")
+                    .padding()
+                    .background(viewmodel.themeColor.opacity(0.2))
+                    .cornerRadius(10)
             }
             .padding()
         }
     }
 
-    // Funkcja aktualizacji motywu
-    private func updateTheme(to number: Int) {
-        themeNumber = number
-        switch number {
-        case 1:
-            tab = tab1.shuffled()
-            themeColor = .blue
-        case 2:
-            tab = tab2.shuffled()
-            themeColor = .green
-        case 3:
-            tab = tab3.shuffled()
-            themeColor = .red
-        default:
-            break
+    private var cardDisplay: some View {
+        ScrollView {
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: 85), spacing: 0)], spacing: 0) {
+                ForEach(viewmodel.cards) { card in
+                    CardView(card: card)
+                        .padding(5)
+                        .foregroundColor(viewmodel.themeColor)
+                }
+            }
         }
     }
 }
 
 #Preview {
-    ContentView()
+    ContentView(viewmodel: MemoGameViewModel())
 }
+
