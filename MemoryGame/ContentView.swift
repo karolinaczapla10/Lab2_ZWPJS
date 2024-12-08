@@ -18,6 +18,12 @@ struct ContentView: View {
                 .padding()
                 .foregroundColor(viewmodel.themeColor)
 
+            if let mainCard = viewmodel.mainCard {
+                            CardView(card: mainCard)
+                                .frame(maxWidth: 150, maxHeight: 150)
+                                .foregroundColor(viewmodel.themeColor)
+                                .padding(.bottom, 20) // Dystans od siatki kart
+                        }
             cardDisplay
             
             Spacer()
